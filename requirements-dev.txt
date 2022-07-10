@@ -1,0 +1,11 @@
+PyYAML==6.0
+requests==2.28.1
+
+## Linters
+
+adamlint==1.0.0
+black==22.6.0
+gitlint==0.17.0
+isort==5.10.1
+mypy==0.961
+pyflakes==2.4.0
