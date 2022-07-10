@@ -41,7 +41,7 @@ def main() -> None:
 
     for domain in conf_options['APP']['DOMAINS']:
         days = check_ssl_cert_for_expiry(domain, conf_options)
-        if days >= 1 and days <= 30:
+        if days >= 1 and days <= conf_options['APP']['EXPIRE_DAYS_THRESHOLD']:
             print(f"The domain {domain} has {days} days left.")
             if "Discord" in conf_options['APP']['NOTIFICATIONS']:
                 send_expire_discord_message(domain, f"Expires in {days} days.", conf_options)
