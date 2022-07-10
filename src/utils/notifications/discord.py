@@ -8,7 +8,7 @@ import requests
 def send_expire_discord_message(domain: str, status: str, config_options: Dict[str, Any]) -> None:
     headers = {"Content-Type": "application/json"}
 
-    with open("templates/domain-expiry.json", "r") as f:
+    with open("templates/discord/domain-expiry.json", "r") as f:
         payload = json.load(f)
 
     payload["embeds"][0]["fields"][0]["value"] = domain
@@ -25,7 +25,7 @@ def send_expire_discord_message(domain: str, status: str, config_options: Dict[s
 def send_completion_discord_message(config_options: Dict[str, Any]) -> None:
     headers = {"Content-Type": "application/json"}
 
-    with open("templates/script-complete.json", "r") as f:
+    with open("templates/discord/script-complete.json", "r") as f:
         payload = json.load(f)
 
     payload["embeds"][0]["timestamp"] = datetime.now(tz=timezone.utc).isoformat()
@@ -40,7 +40,7 @@ def send_completion_discord_message(config_options: Dict[str, Any]) -> None:
 def send_error_discord_message(error: str, config_options: Dict[str, Any]) -> None:
     headers = {"Content-Type": "application/json"}
 
-    with open("templates/script-error.json", "r") as f:
+    with open("templates/discord/script-error.json", "r") as f:
         payload = json.load(f)
 
     payload["embeds"][0]["fields"][0]["value"] = error

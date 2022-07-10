@@ -1,5 +1,7 @@
+from typing import Any, Dict
+
 import zulip
-from typing import Dict, Any
+
 
 def send_completion_zulip_message(config_options: Dict[str, Any]) -> None:
     # Pass the path to your zuliprc file here.
