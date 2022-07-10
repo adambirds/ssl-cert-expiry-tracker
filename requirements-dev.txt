@@ -10,3 +10,7 @@ gitlint==0.17.0
 isort==5.10.1
 mypy==0.961
 pyflakes==2.4.0
+
+## Typing
+
+types-PyYAML==6.0.9
