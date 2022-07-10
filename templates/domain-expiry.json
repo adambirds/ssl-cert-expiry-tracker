@@ -1,0 +1,23 @@
+{
+    "content": null,
+    "embeds": [
+        {
+            "title": "The following domain's SSL certificate will expire soon:",
+            "color": 15651330,
+            "fields": [
+                {
+                    "name": "Domain",
+                    "value": "example.com",
+                    "inline": true
+                },
+                {
+                    "name": "Status",
+                    "value": "Expires in 9 Days",
+                    "inline": true
+                }
+            ],
+            "timestamp": "2022-07-09T14:02:00.000Z"
+        }
+    ],
+    "attachments": []
+}
