@@ -4,12 +4,14 @@ from datetime import datetime
 from typing import Any, Dict
 
 from utils.helpers import process_config_file
-from utils.notifications import (
+from utils.notifications.discord import (
     send_completion_discord_message,
-    send_completion_zulip_message,
     send_error_discord_message,
-    send_error_zulip_message,
     send_expire_discord_message,
+)
+from utils.notifications.zulip import (
+    send_completion_zulip_message,
+    send_error_zulip_message,
     send_expire_zulip_message,
 )
 
