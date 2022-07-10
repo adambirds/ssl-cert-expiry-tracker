@@ -33,7 +33,6 @@ def check_ssl_cert_for_expiry(domain: str, conf_options: Dict[str, Any]) -> int:
         return delta.days
     except ssl.SSLCertVerificationError as e:
         if "self signed certificate" in e.verify_message:
-            print(f"The domain {domain} has a self-signed-cert which isn't supported.")
             if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
                 send_error_discord_message(
                     f"The domain {domain} has a self-signed-cert which isn't supported.",
@@ -60,7 +59,6 @@ def check_ssl_cert_for_expiry(domain: str, conf_options: Dict[str, Any]) -> int:
                 )
             return -2
     except socket.gaierror:
-        print(f"The domain {domain} has no website for us to check against.")
         if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
             send_error_discord_message(
                 f"The domain {domain} has no website for us to check against.", conf_options
@@ -88,7 +86,6 @@ def main() -> None:
     for domain in conf_options["APP"]["DOMAINS"]:
         days = check_ssl_cert_for_expiry(domain, conf_options)
         if days >= 1 and days <= conf_options["APP"]["EXPIRE_DAYS_THRESHOLD"]:
-            print(f"The domain {domain} has {days} days left.")
             if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
                 send_expire_discord_message(domain, f"Expires in {days} days.", conf_options)
             if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
@@ -96,13 +93,11 @@ def main() -> None:
                     domain, f"is set to expires in {days} days.", conf_options
                 )
         elif days == 0:
-            print(f"The domain {domain} expires today.")
             if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
                 send_expire_discord_message(domain, "Expires today.", conf_options)
             if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
                 send_expire_zulip_message(domain, "expires today.", conf_options)
         elif days == -1:
-            print(f"The domain {domain} has expired.")
             if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
                 send_expire_discord_message(domain, "Expired", conf_options)
             if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
