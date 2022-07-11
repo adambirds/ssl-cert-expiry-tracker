@@ -3,22 +3,10 @@ import ssl
 from datetime import datetime
 from typing import Any, Dict
 
-from utils.helpers import process_config_file
-from utils.notifications.discord import (
-    send_completion_discord_message,
-    send_error_discord_message,
-    send_expire_discord_message,
-)
-from utils.notifications.slack import (
-    send_completion_slack_message,
-    send_error_slack_message,
-    send_expire_slack_message,
-)
-from utils.notifications.zulip import (
-    send_completion_zulip_message,
-    send_error_zulip_message,
-    send_expire_zulip_message,
-)
+from utils.helpers import process_config_file, send_error_notifications
+from utils.notifications.discord import send_completion_discord_message, send_expire_discord_message
+from utils.notifications.slack import send_completion_slack_message, send_expire_slack_message
+from utils.notifications.zulip import send_completion_zulip_message, send_expire_zulip_message
 
 
 def check_ssl_cert_for_expiry(domain: str, conf_options: Dict[str, Any]) -> int:
@@ -40,62 +28,24 @@ def check_ssl_cert_for_expiry(domain: str, conf_options: Dict[str, Any]) -> int:
         return delta.days
     except ssl.SSLCertVerificationError as e:
         if "self signed certificate" in e.verify_message:
-            if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
-                send_error_discord_message(
-                    f"The domain {domain} has a self-signed-cert which isn't supported.",
-                    conf_options,
-                )
-            if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
-                send_error_slack_message(
-                    f"The domain {domain} has a self-signed-cert which isn't supported.",
-                    conf_options,
-                )
-            if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
-                send_error_zulip_message(
-                    f"The domain {domain} has a self-signed-cert which isn't supported.",
-                    conf_options,
-                )
+            send_error_notifications(
+                f"The domain {domain} has a self-signed-cert which isn't supported.", conf_options
+            )
             return -2
         elif "certificate has expired" in e.verify_message:
             return -1
         else:
-            if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
-                send_error_discord_message(
-                    f"The domain {domain} has this error: {e.verify_message}",
-                    conf_options,
-                )
-            if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
-                send_error_slack_message(
-                    f"The domain {domain} has this error: {e.verify_message}",
-                    conf_options,
-                )
-            if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
-                send_error_zulip_message(
-                    f"The domain {domain} has this error: {e.verify_message}",
-                    conf_options,
-                )
+            send_error_notifications(
+                f"The domain {domain} has this error: {e.verify_message}", conf_options
+            )
             return -2
     except socket.gaierror:
-        if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
-            send_error_discord_message(
-                f"The domain {domain} has no website for us to check against.", conf_options
-            )
-        if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
-            send_error_slack_message(
-                f"The domain {domain} has no website for us to check against.", conf_options
-            )
-        if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
-            send_error_zulip_message(
-                f"The domain {domain} has no website for us to check against.", conf_options
-            )
+        send_error_notifications(
+            f"The domain {domain} has no website for us to check against.", conf_options
+        )
         return -2
     except ValueError as e:
-        if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
-            send_error_discord_message(f"The domain {domain} has this error: {e}", conf_options)
-        if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
-            send_error_slack_message(f"The domain {domain} has this error: {e}", conf_options)
-        if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
-            send_error_zulip_message(f"The domain {domain} has this error: {e}", conf_options)
+        send_error_notifications(f"The domain {domain} has this error: {e}", conf_options)
         return -2
 
 
