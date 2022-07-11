@@ -58,7 +58,7 @@ def send_error_notifications(error: str, conf_options: Dict[str, Any]) -> None:
 def send_expire_notifications(domain: str, days: int, conf_options: Dict[str, Any]) -> None:
     if days >= 1 and days <= conf_options["APP"]["EXPIRE_DAYS_THRESHOLD"]:
         if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
-            send_expire_discord_message(domain, f"Expires in {days} days.", conf_options)
+            send_expire_discord_message(domain, f"Expires in {days} days.", days, conf_options)
         if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
             send_expire_slack_message(domain, f"Expires in {days} days.", days, conf_options)
         if "Teams" in conf_options["APP"]["NOTIFICATIONS"]:
@@ -67,7 +67,7 @@ def send_expire_notifications(domain: str, days: int, conf_options: Dict[str, An
             send_expire_zulip_message(domain, f"is set to expires in {days} days.", conf_options)
     elif days == 0:
         if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
-            send_expire_discord_message(domain, "Expires today.", conf_options)
+            send_expire_discord_message(domain, "Expires today.", days, conf_options)
         if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
             send_expire_slack_message(domain, "Expires today.", days, conf_options)
         if "Teams" in conf_options["APP"]["NOTIFICATIONS"]:
@@ -76,7 +76,7 @@ def send_expire_notifications(domain: str, days: int, conf_options: Dict[str, An
             send_expire_zulip_message(domain, "expires today.", conf_options)
     elif days == -1:
         if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
-            send_expire_discord_message(domain, "Expired", conf_options)
+            send_expire_discord_message(domain, "Expired", days, conf_options)
         if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
             send_expire_slack_message(domain, "Expired.", days, conf_options)
         if "Teams" in conf_options["APP"]["NOTIFICATIONS"]:
