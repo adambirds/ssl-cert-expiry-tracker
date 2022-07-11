@@ -9,6 +9,11 @@ from utils.notifications.discord import (
     send_error_discord_message,
     send_expire_discord_message,
 )
+from utils.notifications.slack import (
+    send_completion_slack_message,
+    send_error_slack_message,
+    send_expire_slack_message,
+)
 from utils.notifications.zulip import (
     send_completion_zulip_message,
     send_error_zulip_message,
@@ -40,6 +45,11 @@ def check_ssl_cert_for_expiry(domain: str, conf_options: Dict[str, Any]) -> int:
                     f"The domain {domain} has a self-signed-cert which isn't supported.",
                     conf_options,
                 )
+            if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
+                send_error_slack_message(
+                    f"The domain {domain} has a self-signed-cert which isn't supported.",
+                    conf_options,
+                )
             if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
                 send_error_zulip_message(
                     f"The domain {domain} has a self-signed-cert which isn't supported.",
@@ -54,6 +64,11 @@ def check_ssl_cert_for_expiry(domain: str, conf_options: Dict[str, Any]) -> int:
                     f"The domain {domain} has this error: {e.verify_message}",
                     conf_options,
                 )
+            if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
+                send_error_slack_message(
+                    f"The domain {domain} has this error: {e.verify_message}",
+                    conf_options,
+                )
             if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
                 send_error_zulip_message(
                     f"The domain {domain} has this error: {e.verify_message}",
@@ -65,6 +80,10 @@ def check_ssl_cert_for_expiry(domain: str, conf_options: Dict[str, Any]) -> int:
             send_error_discord_message(
                 f"The domain {domain} has no website for us to check against.", conf_options
             )
+        if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
+            send_error_slack_message(
+                f"The domain {domain} has no website for us to check against.", conf_options
+            )
         if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
             send_error_zulip_message(
                 f"The domain {domain} has no website for us to check against.", conf_options
@@ -73,6 +92,8 @@ def check_ssl_cert_for_expiry(domain: str, conf_options: Dict[str, Any]) -> int:
     except ValueError as e:
         if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
             send_error_discord_message(f"The domain {domain} has this error: {e}", conf_options)
+        if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
+            send_error_slack_message(f"The domain {domain} has this error: {e}", conf_options)
         if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
             send_error_zulip_message(f"The domain {domain} has this error: {e}", conf_options)
         return -2
@@ -90,6 +111,8 @@ def main() -> None:
         if days >= 1 and days <= conf_options["APP"]["EXPIRE_DAYS_THRESHOLD"]:
             if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
                 send_expire_discord_message(domain, f"Expires in {days} days.", conf_options)
+            if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
+                send_expire_slack_message(domain, f"Expires in {days} days.", days, conf_options)
             if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
                 send_expire_zulip_message(
                     domain, f"is set to expires in {days} days.", conf_options
@@ -97,16 +120,22 @@ def main() -> None:
         elif days == 0:
             if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
                 send_expire_discord_message(domain, "Expires today.", conf_options)
+            if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
+                send_expire_slack_message(domain, "Expires today.", days, conf_options)
             if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
                 send_expire_zulip_message(domain, "expires today.", conf_options)
         elif days == -1:
             if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
                 send_expire_discord_message(domain, "Expired", conf_options)
+            if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
+                send_expire_slack_message(domain, "Expired.", days, conf_options)
             if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
                 send_expire_zulip_message(domain, "is expired.", conf_options)
 
     if "Discord" in conf_options["APP"]["NOTIFICATIONS"]:
         send_completion_discord_message(conf_options)
+    if "Slack" in conf_options["APP"]["NOTIFICATIONS"]:
+        send_completion_slack_message(conf_options)
     if "ZulipAPI" in conf_options["APP"]["NOTIFICATIONS"]:
         send_completion_zulip_message(conf_options)
 

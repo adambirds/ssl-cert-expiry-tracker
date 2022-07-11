@@ -1,0 +1,14 @@
+{
+    "blocks": [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "The SSL Certificate Expiry Tracker script has completed successfully."
+            }
+        },
+        {
+            "type": "divider"
+        }
+    ]
+}

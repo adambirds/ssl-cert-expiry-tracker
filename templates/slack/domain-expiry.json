@@ -1,0 +1,30 @@
+{
+    "blocks": [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "The following domain's SSL certificate will expire soon:"
+            }
+        },
+        {
+			"type": "divider"
+		},
+        {
+            "type": "section",
+            "fields": [
+                {
+                    "type": "mrkdwn",
+                    "text": "*Domain:*\nexample.com"
+                },
+                {
+                    "type": "mrkdwn",
+                    "text": "*Status:*\nExpires in 9 Days."
+                }
+            ]
+        },
+        {
+            "type": "divider"
+        }
+    ]
+}

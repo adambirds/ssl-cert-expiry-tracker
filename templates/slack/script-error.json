@@ -1,0 +1,26 @@
+{
+    "blocks": [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": "The SSL Certificate Expiry Tracker script has suffered the following error:"
+            }
+        },
+        {
+            "type": "divider"
+        },
+        {
+            "type": "section",
+            "fields": [
+                {
+                    "type": "mrkdwn",
+                    "text": "*Error:*\nRandom Error"
+                }
+            ]
+        },
+        {
+            "type": "divider"
+        }
+    ]
+}

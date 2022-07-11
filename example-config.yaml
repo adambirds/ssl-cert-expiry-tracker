@@ -23,3 +23,6 @@ APP:
   #SMTP_PORT: 25
   #SMTP_FROM: "no-reply@example.com"
   #SMTP_SEND_TO: "example@example.com"
+  SLACK_WEBHOOK: ""
+  SLACK_WEBHOOK_ERROR: ""
+  SLACK_WEBHOOK_COMPLETION: ""
